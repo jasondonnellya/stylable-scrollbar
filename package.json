@@ -2,9 +2,16 @@
   "name": "stylable-scrollbar",
   "version": "1.0.0",
   "description": "Easy to use, custom JS scrollbar.",
-  "main": "index.js",
+  "types": "./lib/cjs/types/index.d.ts",
+  "main": "./lib/cjs/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint --ext .ts --ignore-path .gitignore .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "del-cli lib",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p ./configs/tsconfig.esm.json && cp-cli ./lib/esm/index.js ./lib/esm/index.mjs",
+    "build:cjs": "tsc -p ./configs/tsconfig.cjs.json",
+    "prepack": "npm run build"
   },
   "keywords": [
     "javascript",
@@ -14,7 +21,25 @@
   ],
   "author": "Jason Donnelly",
   "license": "MIT",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/types/index.d.ts",
+        "default": "./lib/esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/cjs/types/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      }
+    }
+  },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "devDependencies": {
+    "cp-cli": "^2.0.0",
+    "del-cli": "^5.0.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
+  }
 }
