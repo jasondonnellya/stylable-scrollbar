@@ -1,0 +1,20 @@
+{
+  "name": "stylable-scrollbar",
+  "version": "1.0.0",
+  "description": "Easy to use, custom JS scrollbar.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "scroll",
+    "scrollbar",
+    "custom"
+  ],
+  "author": "Jason Donnelly",
+  "license": "MIT",
+  "files": [
+    "lib/**/*"
+  ]
+}

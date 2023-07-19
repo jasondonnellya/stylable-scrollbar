@@ -1,0 +1,71 @@
+p, html, body {
+  margin: 0;
+}
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --width: 300px;
+  --height: 20px;
+}
+
+body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.horizontal-container {
+  display: grid;
+  gap: 10px;
+  .horizontal {
+    > * {
+      height: 100%;
+      width: 1000px;
+    }
+  }
+}
+
+.vertical-container {
+  display: flex;
+  gap: 10px;
+  .vertical {
+    display: grid;
+  }
+}
+
+[simple-scrollbar-scroll] {
+  width: var(--width);
+  height: var(--width);
+  padding: 10px;
+  background: rgb(240, 240, 240);
+}
+
+[simple-scrollbar-inner] {
+  width: var(--width);
+  height: var(--height);
+  background: lightgray;
+  border: solid transparent 0px;
+  border-radius: 20px;
+}
+[simple-scrollbar-handle] {
+  width: 40px;
+  height: 20px;
+  background: darkgrey;
+  border: solid transparent 0px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 1px black;
+}
+
+[direction="vertical"] {
+  [simple-scrollbar-inner] {
+    width: var(--height);
+    height: var(--width);
+  }
+  [simple-scrollbar-handle] {
+    width: 20px;
+    height: 40px;
+  }
+}
