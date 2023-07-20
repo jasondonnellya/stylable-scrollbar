@@ -5,7 +5,7 @@ Easy to use, super lightweight (only 4KB~ for UMD Module) and fully stylable, cu
 Once you define your scrollbar and scrollbar scrollable containers with the same ID, as can be seen in the examples,
 you can easily place them anywhere on the page and style them to your liking.
 
-You can even add more HTML inside the defined scrollbars and style that too.
+You can even add more HTML inside the defined scrollbars and style that too. e.g. icons, backgrounds, extra buttons etc.
 
 ## INSTALLATION
 
