@@ -160,7 +160,7 @@ class SimpleScrollbar {
 
 const initStylableScrollbars = (settings) => {
   if(settings) {
-    if(settings.keepContainerScrollbars) hideDefaultScrollbars()
+    if(!settings.keepContainerScrollbars) hideDefaultScrollbars()
   } else {
     hideDefaultScrollbars()
   }
