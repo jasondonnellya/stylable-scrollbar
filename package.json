@@ -4,42 +4,50 @@
   "description": "Easy to use, custom JS scrollbar.",
   "types": "./lib/cjs/types/index.d.ts",
   "main": "./lib/cjs/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jasondonnellya/stylable-scrollbar.git"
+  },
   "scripts": {
-    "lint": "eslint --ext .ts --ignore-path .gitignore .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "del-cli lib",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p ./configs/tsconfig.esm.json && cp-cli ./lib/esm/index.js ./lib/esm/index.mjs",
-    "build:cjs": "tsc -p ./configs/tsconfig.cjs.json",
-    "prepack": "npm run build"
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c"
   },
   "keywords": [
+    "html",
     "javascript",
     "scroll",
     "scrollbar",
-    "custom"
+    "custom",
+    "css",
+    "styling",
+    "stylable"
   ],
   "author": "Jason Donnelly",
   "license": "MIT",
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/esm/types/index.d.ts",
-        "default": "./lib/esm/index.mjs"
+        "types": "./dist/esm/types/index.d.ts",
+        "default": "./dist/esm/index.esm.js"
       },
       "require": {
-        "types": "./lib/cjs/types/index.d.ts",
-        "default": "./lib/cjs/index.js"
+        "types": "./dist/cjs/types/index.d.ts",
+        "default": "./dist/cjs/index.cjs.js"
       }
     }
   },
   "files": [
-    "lib/**/*"
+    "dist/**/*"
   ],
   "devDependencies": {
-    "cp-cli": "^2.0.0",
-    "del-cli": "^5.0.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "deepmerge": "^4.3.1",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.26.3",
     "tslib": "^2.6.0",
     "typescript": "^5.1.6"
-  }
+  },
+  "type": "module"
 }

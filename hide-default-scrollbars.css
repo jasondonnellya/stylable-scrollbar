@@ -1,8 +1,0 @@
-// GENERATE THIS IN CODE INSTEAD.
-[simple-scrollbar-scroll]::-webkit-scrollbar{
-  display: none;
-}
-[simple-scrollbar-scroll] {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}

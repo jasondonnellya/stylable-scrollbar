@@ -36,21 +36,21 @@ body {
   }
 }
 
-[simple-scrollbar-scroll] {
+[stylable-scrollbar-scrollable] {
   width: var(--width);
   height: var(--width);
   padding: 10px;
   background: rgb(240, 240, 240);
 }
 
-[simple-scrollbar-inner] {
+[stylable-scrollbar-inner] {
   width: var(--width);
   height: var(--height);
   background: lightgray;
   border: solid transparent 0px;
   border-radius: 20px;
 }
-[simple-scrollbar-handle] {
+[stylable-scrollbar-handle] {
   width: 40px;
   height: 20px;
   background: darkgrey;
@@ -60,11 +60,11 @@ body {
 }
 
 [direction="vertical"] {
-  [simple-scrollbar-inner] {
+  [stylable-scrollbar-inner] {
     width: var(--height);
     height: var(--width);
   }
-  [simple-scrollbar-handle] {
+  [stylable-scrollbar-handle] {
     width: 20px;
     height: 40px;
   }

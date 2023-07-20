@@ -1,5 +1,30 @@
 let ATTRIBUTE_PREFIX = "stylable-scrollbar";
 
+const hideDefaultScrollbars = () => {
+  let css = `
+    [stylable-scrollbar-scrollable]::-webkit-scrollbar{
+      display: none;
+    }
+    [stylable-scrollbar-scrollable] {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  `,
+    head = document.head || document.getElementsByTagName('head')[0],
+    style: HTMLElement = document.createElement('style');
+  head.appendChild(style);
+  style.setAttribute('type', 'text/css')
+
+  // For some reason style.styleSheet is not allowed in TS.
+
+  //if (style.styleSheet) {
+  //  // This is required for IE8 and below.
+  //  style.styleSheet.cssText = css;
+  //} else {
+    style.appendChild(document.createTextNode(css));
+  //}
+}
+
 const setupScrollbar = (scrollbarContainer) => {
   const scrollHandle = scrollbarContainer.querySelector(
     `[${ATTRIBUTE_PREFIX}-handle]`
@@ -111,7 +136,7 @@ const scrollEnd = (e) => {
 
 // We don't use this simpleScrollbars array when triggering events because scopes like this are not persistent.
 let simpleScrollbars: SimpleScrollbar[] = [];
-// This class is simply to provide a clear, type strict reference to all the variables use by the scrollbars.
+// This class is simply to provide a clear, type strict reference to all the variables used by the scrollbars.
 class SimpleScrollbar {
   scrollbarId: any;
   scrollbarContainer: HTMLElement;
@@ -133,7 +158,12 @@ class SimpleScrollbar {
   }
 }
 
-export const initStylableScrollbars = () => {
+const initStylableScrollbars = (settings) => {
+  if(settings) {
+    if(settings.keepContainerScrollbars) hideDefaultScrollbars()
+  } else {
+    hideDefaultScrollbars()
+  }
   const scrollbars: HTMLElement[] = Array.from(document.querySelectorAll(
     `[${ATTRIBUTE_PREFIX}]`
   ));

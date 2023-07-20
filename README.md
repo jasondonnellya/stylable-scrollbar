@@ -1,19 +1,50 @@
 # stylable-scrollbar
-Easy to use, and fully stylable custom JS scrollbar.
+
+Easy to use, super lightweight (only 4KB~ for UMD Module) and fully stylable, customisable JS scrollbar.
+
+Once you define your scrollbar and scrollbar scrollable containers with the same ID, as can be seen in the examples,
+you can easily place them anywhere on the page and style them to your liking.
+
+You can even add more HTML inside the defined scrollbars and style that too.
 
 ## INSTALLATION
 
 ```
- npm i stylable-scrollbar
+npm i stylable-scrollbar
 ```
 
 ## USAGE
 
-Import:
-```JS
+### Import
 
+ESM
+
+```JS
+import initStylableScrollbars from 'stylable-scrollbar'
+initStylableScrollbars()
 ```
-Initialising:
+
+CJS
+
+```JS
+const initStylableScrollbars = require('stylable-scrollbar')
+initStylableScrollbars()
+```
+
+Vanilla JS
+
+```HTML
+<script src="https://unpkg.com/stylable-scrollbar@1.0.1/dist/umd/index.umd.js"></script>
+<script>
+    window.initStylableScrollbars()
+</script>
+```
+
+### Example
+
+Check out a minimal example at https://unpkg.com/stylable-scrollbar@1.0.1/example/index.html and below is a basic usage
+example.
+
 ```HTML
 <!-- The stylable-scrollbar-scrollable attribute must have a value which acts as an ID. -->
 <div stylable-scrollbar-scrollable="1"></div>
@@ -33,3 +64,85 @@ Initialising:
     </div>
 </div>
 ```
+
+## DOCUMENTATION
+
+### Attributes
+
+#### stylable-scrollbar-scrollable
+
+(*) Requires a value that acts as an 'id' matching the scrollable container.
+
+#### stylable-scrollbar
+
+(*) Requires a value that acts as an 'id' matching the scrollable container.
+
+#### stylable-scrollbar-inner
+
+The inner part of the scrollbar that contains the handle.
+
+#### stylable-scrollbar-handle
+
+The handle of the scrollbar.
+
+### Settings
+
+It is possible to pass an object that contains settings for stylable-scrollbar as shown.
+
+```
+initStylableScrollbars({ keepContainerScrollbars: true, /** apply settings here */ })
+```
+
+#### keepContainerScrollbars: Boolean
+
+This will ignore the CSS that is generated to remove scrollbars from any element with selector [stylable-scrollbar-scrollable] so you can keep the default scrollbars within the containers.
+
+### Custom CSS.
+
+It is easy to target all the built in HTML of stylable-scrollbar using the attribute selector, see below.
+
+```CSS
+:root {
+  --width: 300px;
+  --height: 20px;
+}
+
+[stylable-scrollbar-scrollable] {
+  width: var(--width);
+  height: var(--width);
+  padding: 10px;
+  background: rgb(240, 240, 240);
+}
+
+[stylable-scrollbar-inner] {
+  width: var(--width);
+  height: var(--height);
+  background: lightgray;
+  border: solid transparent 0px;
+  border-radius: 20px;
+}
+[stylable-scrollbar-handle] {
+  width: 40px;
+  height: 20px;
+  background: darkgrey;
+  border: solid transparent 0px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 1px black;
+}
+
+[direction="vertical"] {
+  [stylable-scrollbar-inner] {
+    width: var(--height);
+    height: var(--width);
+  }
+  [stylable-scrollbar-handle] {
+    width: 20px;
+    height: 40px;
+  }
+}
+```
+
+## SUPPORT
+
+If you notice any constraints or bugs with this scrollbar, or you would just like to suggest features, don't hesitate
+to open an issue on the GitHub repository. Thanks!
