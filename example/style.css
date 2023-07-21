@@ -43,7 +43,7 @@ body {
   background: rgb(240, 240, 240);
 }
 
-[stylable-scrollbar-inner] {
+[stylable-scrollbar] {
   width: var(--width);
   height: var(--height);
   background: lightgray;
@@ -60,10 +60,8 @@ body {
 }
 
 [direction="vertical"] {
-  [stylable-scrollbar-inner] {
-    width: var(--height);
-    height: var(--width);
-  }
+  width: var(--height);
+  height: var(--width);
   [stylable-scrollbar-handle] {
     width: 20px;
     height: 40px;

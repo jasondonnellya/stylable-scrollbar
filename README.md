@@ -43,25 +43,24 @@ Vanilla JS
 ### Example
 
 Check out a minimal example at https://unpkg.com/stylable-scrollbar@1.0.0/example/index.html and below is a basic usage
-example.
+example containing two seperate scrollbars.
 
 ```HTML
 <!-- The stylable-scrollbar-scrollable attribute must have a value which acts as an ID. -->
-<div stylable-scrollbar-scrollable="1"></div>
+<div stylable-scrollbar-scrollable="example"></div>
+
 <!-- The stylable-scrollbar attribute must have a matching ID to it's scrollable container as seen above. -->
-<div stylable-scrollbar="1" direction="horizontal">
-    <div stylable-scrollbar-inner>
-        <div stylable-scrollbar-handle></div>
-    </div>
+<div stylable-scrollbar="example" direction="horizontal">
+    <div stylable-scrollbar-handle></div>
 </div>
 
-<div stylable-scrollbar-scrollable="2">
-</div>
+
+
+<div stylable-scrollbar-scrollable="2"></div>
+
 <!-- If a direction is not applied to the scrollbar, vertical is the default. -->
 <div stylable-scrollbar="2" direction="vertical">
-    <div stylable-scrollbar-inner>
-        <div stylable-scrollbar-handle></div>
-    </div>
+    <div stylable-scrollbar-handle></div>
 </div>
 ```
 
@@ -77,20 +76,20 @@ example.
 
 (*) Requires a value that acts as an 'id' matching the scrollable container.
 
-#### stylable-scrollbar-inner
-
-The inner part of the scrollbar that contains the handle.
-
 #### stylable-scrollbar-handle
 
 The handle of the scrollbar.
+
+#### direction
+
+The direction which the scollbar scrolls. ("horizontal", "vertical") defaults to "vertical".
 
 ### Settings
 
 It is possible to pass an object that contains settings for stylable-scrollbar as shown.
 
 ```
-initStylableScrollbars({ keepContainerScrollbars: true, /** apply settings here */ })
+initStylableScrollbars({ keepContainerScrollbars: true })
 ```
 
 #### keepContainerScrollbars: Boolean
@@ -99,7 +98,7 @@ This will ignore the CSS that is generated to remove scrollbars from any element
 
 ### Custom CSS.
 
-It is easy to target all the built in HTML of stylable-scrollbar using the attribute selector, see below.
+It is easy to target all the built in HTML of stylable-scrollbar using the attribute selector, see below example.
 
 ```CSS
 :root {
@@ -114,7 +113,7 @@ It is easy to target all the built in HTML of stylable-scrollbar using the attri
   background: rgb(240, 240, 240);
 }
 
-[stylable-scrollbar-inner] {
+[stylable-scrollbar] {
   width: var(--width);
   height: var(--height);
   background: lightgray;
@@ -130,11 +129,10 @@ It is easy to target all the built in HTML of stylable-scrollbar using the attri
   box-shadow: 0px 0px 5px 1px black;
 }
 
-[direction="vertical"] {
-  [stylable-scrollbar-inner] {
-    width: var(--height);
-    height: var(--width);
-  }
+[stylable-scrollbar] [direction="vertical"] {
+  width: var(--height);
+  height: var(--width);
+
   [stylable-scrollbar-handle] {
     width: 20px;
     height: 40px;
