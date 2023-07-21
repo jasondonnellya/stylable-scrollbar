@@ -6,7 +6,7 @@
   "main": "./lib/cjs/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jasondonnellya/stylable-scrollbar.git"
+    "url": "git+https://github.com/jasondonnellya/stylable-scrollbar.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -49,5 +49,44 @@
     "tslib": "^2.6.0",
     "typescript": "^5.1.6"
   },
-  "type": "module"
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jasondonnellya/stylable-scrollbar/issues"
+  },
+  "homepage": "https://github.com/jasondonnellya/stylable-scrollbar#readme",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "balanced-match": "^1.0.2",
+    "buffer-from": "^1.1.2",
+    "eastasianwidth": "^0.2.0",
+    "acorn": "^8.10.0",
+    "brace-expansion": "^2.0.1",
+    "foreground-child": "^3.1.1",
+    "emoji-regex": "^8.0.0",
+    "has": "^1.0.3",
+    "function-bind": "^1.1.1",
+    "estree-walker": "^2.0.2",
+    "is-core-module": "^2.12.1",
+    "minipass": "^7.0.2",
+    "path-parse": "^1.0.7",
+    "jackspeak": "^2.2.1",
+    "path-scurry": "^1.10.1",
+    "randombytes": "^2.1.0",
+    "picomatch": "^2.3.1",
+    "serialize-javascript": "^6.0.1",
+    "safe-buffer": "^5.2.1",
+    "resolve": "^1.22.2",
+    "source-map-support": "^0.5.21",
+    "smob": "^1.4.0",
+    "source-map": "^0.6.1",
+    "commander": "^2.20.3",
+    "terser": "^5.19.1",
+    "isexe": "^2.0.0",
+    "supports-preserve-symlinks-flag": "^1.0.0",
+    "strip-ansi-cjs": "^6.0.1",
+    "wrap-ansi-cjs": "^7.0.0",
+    "string-width-cjs": "^4.2.3"
+  }
 }
