@@ -11,7 +11,7 @@
   "scripts": {
     "test": "mocha -r ts-node/register 'test/*.spec.ts'",
     "clean": "rimraf dist",
-    "build": "npm run clean && rollup --bundleConfigAsCjs -c",
+    "build": "npm run clean && rollup -c",
     "prebuild": "npm run test",
     "prepack": "npm run build"
   },
