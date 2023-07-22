@@ -1,5 +1,6 @@
 {
   "include": ["src/*.ts", "test/*.spec.ts"],
+  "exclude": ["node_modules", "test/*.spec.ts"],
   "compilerOptions": {
     "types": ["mocha", "node"],
     "strict": true,
@@ -10,6 +11,8 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
-    "lib": ["ES2015", "DOM"]
+    "lib": ["ES2015", "DOM"],
+    "declarationDir": "dist/types/",
+    "declaration": true
   }
 }

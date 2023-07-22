@@ -34,7 +34,7 @@ initStylableScrollbars()
 Vanilla JS
 
 ```HTML
-<script src="https://unpkg.com/stylable-scrollbar@1.0.7/dist/umd/index.umd.js"></script>
+<script src="https://unpkg.com/stylable-scrollbar@1.0.8/dist/umd/index.umd.js"></script>
 <script>
     window.initStylableScrollbars()
 </script>

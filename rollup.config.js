@@ -1,8 +1,8 @@
 // rollup.config.js
 
 /**
- * I preferably wanted to output this with best possible practices, so including the index.d.ts files,
- * but rollup does not really have a way to do that which I've found. It would work with tsc.
+ * https://github.com/ezolenko/rollup-plugin-typescript2/issues/211#issuecomment-603526125
+ * Need to get types working because when importing using esm we get error mentioning that types are not available.
  */
 
 const prefix = "dist";
