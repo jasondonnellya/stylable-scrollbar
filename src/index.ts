@@ -1,18 +1,22 @@
 let ATTRIBUTE_PREFIX = "stylable-scrollbar";
 
-// We don't use this simpleScrollbars array when triggering events because scopes like this are not persistent.
-let simpleScrollbars: SimpleScrollbar[] = [];
-// This class is simply to provide a clear, type strict reference to all the variables used by the scrollbars.
-class SimpleScrollbar {
+// We don't use this stylableScrollbars array when triggering events because scopes like this are not persistent.
+let stylableScrollbars: StylableScrollbar[] = [];
+// This class is simply to provide a clear,  model of all the variables used by the scrollbars.
+class StylableScrollbar {
   scrollbarId: any;
   scrollbarContainer: HTMLElement;
   contentContainer: HTMLElement;
   scrollbarDirection: String;
+  scrollSpeed: Number;
+  responsive: Boolean;
   constructor({
     scrollbarId,
     scrollbarContainer,
     contentContainer,
     scrollbarDirection,
+    scrollSpeed,
+    responsive
   }) {
     this.scrollbarId = scrollbarId;
     this.scrollbarContainer = scrollbarContainer;
@@ -21,6 +25,10 @@ class SimpleScrollbar {
     this.scrollbarDirection = scrollbarDirection || "vertical";
     if (this.scrollbarContainer)
       scrollbarContainer.setAttribute("direction", this.scrollbarDirection);
+    this.scrollSpeed = scrollSpeed || 1
+    if (this.scrollbarContainer) scrollbarContainer.setAttribute("scrollspeed", this.scrollSpeed)
+    this.responsive = responsive || true
+    if (this.scrollbarContainer) scrollbarContainer.setAttribute("responsive", this.responsive)
   }
 }
 class StylableScrollbarSettings {
@@ -64,11 +72,11 @@ const hideDefaultScrollbars = (): void => {
  * Add default styling to scrollbars.
  */
 const setupScrollbar = (scrollbarContainer: HTMLElement): void => {
-  const scrollHandle = <HTMLElement>scrollbarContainer.querySelector(
+  const scrollbarHandle = <HTMLElement>scrollbarContainer.querySelector(
     `[${ATTRIBUTE_PREFIX}-handle]`
   );
-  if (!scrollHandle) return;
-  scrollHandle.style.position = "absolute";
+  if (!scrollbarHandle) return;
+  scrollbarHandle.style.position = "absolute";
 };
 
 /**
@@ -99,111 +107,207 @@ const disableAllChildren = (element: HTMLElement): void => {
   }
 };
 
-const scrollStart = (e: MouseEvent, scrollbarId: String): void => {
-  e.preventDefault();
-  e.stopPropagation();
-  const scrollbar = document.querySelector(
-    `[${ATTRIBUTE_PREFIX}="${scrollbarId}"]`
-  );
-  if (!scrollbar) return;
-  scrollbar.setAttribute("scrolling", "true");
-  scrollMove(e);
-};
+const constrain = (amount, min, max) => {
+  if (amount <= min) amount = min
+  if (amount >= max) amount = max
+  return amount
+}
 
-const scrollMove = (e: MouseEvent): void => {
-  const scrollbarContainer = document.querySelector(`[scrolling]`);
+const canScroll = (scrollbarContainer) => {
+  if(!scrollbarContainer) return
+  const scrollbarId = scrollbarContainer.getAttribute(`${ATTRIBUTE_PREFIX}`);
+  const contentContainer = document.querySelector(
+    `[${ATTRIBUTE_PREFIX}-scrollable="${scrollbarId}"]`
+  );
+  if (!contentContainer) return;
+  const direction = scrollbarContainer.getAttribute("direction");
+  const responsive = scrollbarContainer.getAttribute("responsive");
+  let canScroll = true
+  if (responsive) {
+    if (direction === 'vertical') canScroll = contentContainer.scrollHeight > contentContainer.clientHeight
+    else if (direction === 'horizontal') canScroll = contentContainer.scrollWidth > contentContainer.clientWidth
+  }
+  if(direction === 'vertical') {
+    console.log(contentContainer.scrollHeight, 'scrollHeight')
+    console.log(contentContainer.clientHeight, 'clientHeight')
+  }
+  if(canScroll) scrollbarContainer.style.display = null
+  else scrollbarContainer.style.display = "none"
+}
+
+const setScrollbarPosition = (scrollbarContainer, scrollAmount, { scrollbarOnly, adjustForHandleSize }): void => {
   if (!scrollbarContainer) return;
   const scrollbarId = scrollbarContainer.getAttribute(`${ATTRIBUTE_PREFIX}`);
   const contentContainer = document.querySelector(
     `[${ATTRIBUTE_PREFIX}-scrollable="${scrollbarId}"]`
   );
   if (!contentContainer) return;
-  e.preventDefault();
-  e.stopPropagation();
-  const scrollHandle: HTMLElement | null = scrollbarContainer.querySelector(
+  const scrollbarHandle: HTMLElement | null = scrollbarContainer.querySelector(
     `[${ATTRIBUTE_PREFIX}-handle]`
   );
-  if (!scrollHandle) return;
+  if (!scrollbarHandle) return;
+
   const direction = scrollbarContainer.getAttribute("direction");
-  if (direction === "horizontal") {
-    const handleWidth = scrollHandle.clientWidth;
-    const containerWidth = scrollbarContainer.clientWidth;
-    const min = 0;
-    const max = containerWidth - handleWidth;
-    const screenXOffset =
-      window.scrollX + scrollbarContainer.getBoundingClientRect().left;
-    let left = e.pageX - handleWidth / 2 - screenXOffset;
-    if (left < min) left = min;
-    if (left > max) left = max;
-    scrollHandle.style.left = `${left}px`;
-    let percentage = left / max;
-    let scrollLeft =
-      (contentContainer.scrollWidth - contentContainer.clientWidth) *
-      percentage;
-    if (scrollLeft < 0) scrollLeft = 0;
-    contentContainer.scrollLeft = scrollLeft;
-  } else if (direction === "vertical") {
-    const handleHeight = scrollHandle.clientHeight;
-    const containerHeight = scrollbarContainer.clientHeight;
-    const min = 0;
-    const max = containerHeight - handleHeight;
-    const screenYOffset =
-      window.scrollY + scrollbarContainer.getBoundingClientRect().top;
-    let top = e.pageY - handleHeight / 2 - screenYOffset;
-    if (top < min) top = min;
-    if (top > max) top = max;
-    scrollHandle.style.top = `${top}px`;
-    let percentage = top / max;
-    let scrollTop =
-      (contentContainer.scrollHeight - contentContainer.clientHeight) *
-      percentage;
-    if (scrollTop < 0) scrollTop = 0;
-    contentContainer.scrollTop = scrollTop;
+  let handleSize = 0,
+    min = 0,
+    max = 0,
+    percentage = 0;
+
+  if (direction === 'vertical') handleSize = scrollbarHandle.clientHeight
+  else if (direction === 'horizontal') handleSize = scrollbarHandle.clientWidth
+  if (scrollbarContainer) {
+    if (direction === 'vertical') max = scrollbarContainer.clientHeight
+    else if (direction === 'horizontal') max = scrollbarContainer.clientWidth
+    max -= handleSize
+
+    if(adjustForHandleSize) scrollAmount -= handleSize / 2
+    scrollAmount = constrain(scrollAmount, min, max)
+
+    if (direction === 'vertical') scrollbarHandle.style.top = `${scrollAmount}px`
+    else if (direction === 'horizontal') scrollbarHandle.style.left = `${scrollAmount}px`
+
+    percentage = scrollAmount / max
+  }
+  if (contentContainer && !scrollbarOnly) {
+    min = 0
+    if (direction === 'vertical') max = contentContainer.scrollHeight - contentContainer.clientHeight
+    else if (direction === 'horizontal') max = contentContainer.scrollWidth - contentContainer.clientWidth
+
+    scrollAmount = max * percentage
+    scrollAmount = constrain(scrollAmount, min, max)
+
+    if (direction === 'vertical') contentContainer.scrollTop = scrollAmount
+    else if (direction === 'horizontal') contentContainer.scrollLeft = scrollAmount
+  }
+}
+
+const setScrolling = (scrollbarContainer) => {
+  scrollbarContainer.setAttribute("scrolling", "true");
+}
+
+const scrollbarStart = (e: MouseEvent, scrollbarId: String): void => {
+  e.preventDefault();
+  e.stopPropagation();
+  const scrollbarContainer = document.querySelector(
+    `[${ATTRIBUTE_PREFIX}="${scrollbarId}"]`
+  );
+  if (!scrollbarContainer) return;
+  setScrolling(scrollbarContainer);
+  scrollbarMove(e);
+};
+
+const scrollbarMove = (e: MouseEvent): void => {
+  const scrollbarContainer = document.querySelector(`[scrolling]`);
+  if (!scrollbarContainer) return
+  e.preventDefault();
+  e.stopPropagation();
+  const direction = scrollbarContainer.getAttribute("direction");
+
+  let scrollAmount = 0
+
+  if (direction === 'vertical') scrollAmount = e.pageY - (window.scrollY + scrollbarContainer?.getBoundingClientRect().top)
+  if (direction === 'horizontal') scrollAmount = e.pageX - (window.scrollX + scrollbarContainer?.getBoundingClientRect().left)
+
+  setScrollbarPosition(scrollbarContainer, scrollAmount, { scrollbarOnly: false, adjustForHandleSize: true })
+};
+
+const scrollbarEnd = (e: MouseEvent): void => {
+  e.preventDefault();
+  e.stopPropagation();
+  let scrollbars = document.querySelectorAll(`[${ATTRIBUTE_PREFIX}]`);
+  for (let i = 0; i < scrollbars.length; i++) {
+    scrollbars[i].removeAttribute("scrolling");
   }
 };
 
-const scrollEnd = (e: MouseEvent): void => {
+const containerScroll = (e: Event, scrollbarId: String) => {
+  const scrollbarContainer = document.querySelector(
+    `[${ATTRIBUTE_PREFIX}="${scrollbarId}"]`
+  );
+  if (!scrollbarContainer) return;
+  if (scrollbarContainer.getAttribute('scrolling')) return
+  const contentContainer = document.querySelector(
+    `[${ATTRIBUTE_PREFIX}-scrollable="${scrollbarId}"]`
+  );
+  if (!contentContainer) return;
+  const scrollbarHandle: HTMLElement | null = scrollbarContainer.querySelector(
+    `[${ATTRIBUTE_PREFIX}-handle]`
+  );
+  if (!scrollbarHandle) return;
+  const direction = scrollbarContainer.getAttribute("direction");
+  let percentage = 0
+  let scrollAmount = 0
+  if(direction === 'vertical') {
+    percentage = contentContainer.scrollTop / (contentContainer.scrollHeight - contentContainer.clientHeight)
+    scrollAmount = (scrollbarContainer.clientHeight  - scrollbarHandle.clientHeight) * percentage
+  }
+  else if(direction === 'horizontal') {
+    percentage = contentContainer.scrollLeft / (contentContainer.scrollWidth - contentContainer.clientWidth)
+    scrollAmount = (scrollbarContainer.clientWidth - scrollbarHandle.clientWidth) * percentage
+  }
+  setScrollbarPosition(scrollbarContainer, scrollAmount, { scrollbarOnly: true, adjustForHandleSize: false })
+}
+
+const containerWheel = (e: WheelEvent, scrollbarId: String) => {
+  const scrollbarContainer = document.querySelector(
+    `[${ATTRIBUTE_PREFIX}="${scrollbarId}"]`
+  );
+  if (!scrollbarContainer) return;
   e.preventDefault();
   e.stopPropagation();
-  let elements = document.querySelectorAll(`[${ATTRIBUTE_PREFIX}]`);
-  for (let i = 0; i < elements.length; i++) {
-    elements[i].removeAttribute("scrolling");
-  }
-};
+  const scrollbarHandle: HTMLElement | null = scrollbarContainer.querySelector(
+    `[${ATTRIBUTE_PREFIX}-handle]`
+  );
+  if (!scrollbarHandle) return;
+  setScrolling(scrollbarContainer);
+  const direction = scrollbarContainer.getAttribute("direction");
+  const scrollSpeed = Number(scrollbarContainer.getAttribute("scrollSpeed"));
+  let current = 0,
+      scrollAmount = 0;
+  if(direction === 'vertical') current = parseInt(scrollbarHandle.style.top)
+  else if(direction === 'horizontal') current = parseInt(scrollbarHandle.style.left)
+  if(isNaN(current)) current = 0
+  scrollAmount = e.deltaY * (scrollSpeed / 10)
+  setScrollbarPosition(scrollbarContainer, current + scrollAmount, { scrollbarOnly: false, adjustForHandleSize: false })
+
+  scrollbarEnd(e)
+}
 
 /**
  * Initialise stylable scrollbars on the appropriate HTMLElements.
  */
 // TODO: Add debug messages with a settings flag for 'debugResponse' and error messages.
-const initStylableScrollbars = (settings?: StylableScrollbarSettings): SimpleScrollbar[] => {
-  if (settings) {
-    if (!settings.keepContainerScrollbars) hideDefaultScrollbars()
-  } else {
-    hideDefaultScrollbars()
-  }
+const initStylableScrollbars = (settings?: StylableScrollbarSettings): StylableScrollbar[] => {
+  if (settings && !settings.keepContainerScrollbars) hideDefaultScrollbars()
+  else hideDefaultScrollbars()
+
   const scrollbars: HTMLElement[] = Array.from(document.querySelectorAll(
     `[${ATTRIBUTE_PREFIX}]`
   ));
-  simpleScrollbars = [];
+  stylableScrollbars = [];
   for (let scrollbarContainer of scrollbars) {
     let scrollbarId = scrollbarContainer.getAttribute(`${ATTRIBUTE_PREFIX}`);
     let contentContainer = document.querySelector(
       `[${ATTRIBUTE_PREFIX}-scrollable="${scrollbarId}"]`
     );
-    if(contentContainer) {
+    if (contentContainer) {
       let scrollbarDirection = scrollbarContainer.getAttribute(`direction`);
-      simpleScrollbars.push(
-        new SimpleScrollbar({
+      let scrollSpeed = scrollbarContainer.getAttribute(`scrollspeed`);
+      let responsive = scrollbarContainer.getAttribute(`responsive`);
+      stylableScrollbars.push(
+        new StylableScrollbar({
           scrollbarContainer,
           contentContainer,
           scrollbarId,
           scrollbarDirection,
+          scrollSpeed,
+          responsive
         })
       );
     }
   }
 
-  for (let simpleScrollbar of simpleScrollbars) {
+  for (let simpleScrollbar of stylableScrollbars) {
     let scrollbarId = simpleScrollbar.scrollbarId;
     let scrollbarContainer = simpleScrollbar.scrollbarContainer;
     let contentContainer = simpleScrollbar.contentContainer;
@@ -218,13 +322,23 @@ const initStylableScrollbars = (settings?: StylableScrollbarSettings): SimpleScr
     }`
     );
     scrollbarContainer.addEventListener("mousedown", (e) =>
-      scrollStart(e, scrollbarId)
+      scrollbarStart(e, scrollbarId)
     );
+    contentContainer.addEventListener("scroll", (e) =>
+      containerScroll(e, scrollbarId)
+    );
+    contentContainer.addEventListener("wheel", (e) => containerWheel(e, scrollbarId))
+    canScroll(scrollbarContainer)
   }
-  window.addEventListener("mousemove", scrollMove);
-  window.addEventListener("mouseup", scrollEnd);
-  window.addEventListener("mouseleave", scrollEnd);
-  return simpleScrollbars
+  window.addEventListener("mousemove", scrollbarMove);
+  window.addEventListener("mouseup", scrollbarEnd);
+  window.addEventListener("mouseleave", scrollbarEnd);
+  window.addEventListener("resize", () => {
+    for(let scrollbar of scrollbars) {
+      canScroll(scrollbar)
+    }
+  })
+  return stylableScrollbars
 };
 
 export default initStylableScrollbars

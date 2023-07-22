@@ -1,6 +1,6 @@
 # stylable-scrollbar
 
-Easy to use, super lightweight (only 4KB~ for UMD Module) and fully stylable, customisable JS scrollbar.
+Easy to use, super lightweight (only 6KB~ for UMD Module) and fully stylable, customisable JS scrollbar.
 
 Once you define your scrollbar and scrollbar scrollable containers with the same ID, as can be seen in the examples,
 you can easily place them anywhere on the page and style them to your liking.
@@ -34,7 +34,7 @@ initStylableScrollbars()
 Vanilla JS
 
 ```HTML
-<script src="https://unpkg.com/stylable-scrollbar@1.0.3/dist/umd/index.umd.js"></script>
+<script src="https://unpkg.com/stylable-scrollbar@1.0.4/dist/umd/index.umd.js"></script>
 <script>
     window.initStylableScrollbars()
 </script>
@@ -43,7 +43,7 @@ Vanilla JS
 ### Example
 
 Check out a minimal example at https://jasondonnellya.github.io/stylable-scrollbar/ and below is a basic usage
-example containing two seperate scrollbars.
+example containing two separate scrollbars.
 
 ```HTML
 <!-- The stylable-scrollbar-scrollable attribute must have a value which acts as an ID. -->
@@ -83,6 +83,14 @@ The handle of the scrollbar.
 #### direction
 
 The direction which the scollbar scrolls. ("horizontal", "vertical") defaults to "vertical".
+
+#### scrollspeed
+
+Scrollspeed defines what speed the container scrolls at when using the mousewheel. (number) defaults to 1.
+
+#### responsive
+
+The responsive attribute dictates whether a scrollbar should hide when it is not possible to scroll the container. (true, false) defaults to true
 
 ### Settings
 
