@@ -34,7 +34,7 @@ initStylableScrollbars()
 Vanilla JS
 
 ```HTML
-<script src="https://unpkg.com/stylable-scrollbar@1.0.8/dist/umd/index.umd.js"></script>
+<script src="https://unpkg.com/stylable-scrollbar@1.0.9/dist/umd/index.umd.js"></script>
 <script>
     window.initStylableScrollbars()
 </script>
@@ -127,6 +127,8 @@ It is easy to target all the built in HTML of stylable-scrollbar using the attri
   background: lightgray;
   border: solid transparent 0px;
   border-radius: 20px;
+  /* Add display none here to hide scrollbars before JS has loaded. */
+  display: none;
 }
 [stylable-scrollbar-handle] {
   width: 40px;

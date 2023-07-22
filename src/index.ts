@@ -127,7 +127,7 @@ const canScroll = (scrollbarContainer) => {
     if (direction === 'vertical') canScroll = contentContainer.scrollHeight > contentContainer.clientHeight
     else if (direction === 'horizontal') canScroll = contentContainer.scrollWidth > contentContainer.clientWidth
   }
-  if(canScroll) scrollbarContainer.style.display = null
+  if(canScroll) scrollbarContainer.style.display = "block"
   else scrollbarContainer.style.display = "none"
 }
 

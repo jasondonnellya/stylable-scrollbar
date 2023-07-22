@@ -1,6 +1,6 @@
 {
   "name": "stylable-scrollbar",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Easy to use, custom JS scrollbar.",
   "types": "./dist/cjs/types/index.d.ts",
   "main": "./dist/cjs/index.js",

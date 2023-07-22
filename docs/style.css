@@ -49,6 +49,7 @@ body {
   background: lightgray;
   border: solid transparent 0px;
   border-radius: 20px;
+  display: none;
 }
 [stylable-scrollbar-handle] {
   width: 40px;
