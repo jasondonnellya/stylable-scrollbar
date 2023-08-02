@@ -1,10 +1,5 @@
 // rollup.config.js
 
-/**
- * https://github.com/ezolenko/rollup-plugin-typescript2/issues/211#issuecomment-603526125
- * Need to get types working because when importing using esm we get error mentioning that types are not available.
- */
-
 const prefix = "dist";
 import typescript from "@rollup/plugin-typescript";
 import terser from '@rollup/plugin-terser';
