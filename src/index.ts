@@ -21,7 +21,7 @@ class StylableScrollbar {
     this.scrollbarId = scrollbarId;
     this.scrollbarContainer = scrollbarContainer;
     this.contentContainer = contentContainer;
-    // Direction can be either 'vertical' or 'horizontal'
+    // Direction can be either 'vertical' or 'horizontal', convert this to an enum for clarity.
     this.scrollbarDirection = scrollbarDirection || "vertical";
     if (this.scrollbarContainer)
       scrollbarContainer.setAttribute("direction", this.scrollbarDirection);
